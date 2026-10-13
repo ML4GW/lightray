@@ -975,7 +975,6 @@ wheels = [
 
 [[package]]
 name = "lightray"
-version = "0.2.5"
 source = { editable = "." }
 dependencies = [
     { name = "botocore" },
