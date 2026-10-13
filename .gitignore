@@ -1,2 +1,5 @@
 **/__pycache__
 **/id_rsa
+*.egg-info/
+build/
+dist/
