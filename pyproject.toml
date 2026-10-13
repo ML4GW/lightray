@@ -29,8 +29,13 @@ dev = [
     "pytest>=8.3.2,<9",
 ]
 
+[tool.setuptools.packages.find]
+include = ["lightray*"]
+
 [tool.setuptools-git-versioning]
 enabled = true
+# skip the helm chart release tags (ray-cluster-*)
+tag_filter = "v.*"
 dev_template = "{tag}.post{ccount}+git.{sha}"
 
 [build-system]
