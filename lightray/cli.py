@@ -16,7 +16,7 @@ from jsonargparse import (
     capture_parser,
 )
 from lightning.pytorch.cli import LightningCLI
-from ray import train, tune
+from ray import tune
 from ray.tune.integration.pytorch_lightning import TuneCallback
 
 from lightray import fs, utils
@@ -28,11 +28,11 @@ def cli(args=None):
     parser.add_subclass_arguments(TuneCallback, "tune_callback")
     parser.add_class_arguments(tune.TuneConfig, "tune_config")
     parser.add_class_arguments(
-        train.RunConfig, "run_config", skip="storage_filesystem"
+        tune.RunConfig, "run_config", skip="storage_filesystem"
     )
     # TODO: use add class arguments from tune.Tuner directly
     # see https://github.com/omni-us/jsonargparse/issues/609
-    parser.add_class_arguments(train.SyncConfig, "sync_config")
+    parser.add_class_arguments(tune.SyncConfig, "sync_config")
     parser.add_function_arguments(ray.init, "ray_init")
     parser.add_argument(
         "--lightning_cli_cls",
@@ -49,12 +49,12 @@ def cli(args=None):
     parser.add_argument("--cpus_per_trial", type=int, default=1)
 
     parser.link_arguments(
-        "run_config.checkpoint_config.checkpoint_score_attribute",
+        "run_config.checkpoint_config.init_args.checkpoint_score_attribute",
         "tune_callback.init_args.metric",
         apply_on="parse",
     )
     parser.link_arguments(
-        "run_config.checkpoint_config.checkpoint_score_order",
+        "run_config.checkpoint_config.init_args.checkpoint_score_order",
         "tune_callback.init_args.mode",
         apply_on="parse",
     )
@@ -97,7 +97,7 @@ def cli(args=None):
 
     # instantiate tune related classes from config
     # and parse the parameter space
-    cfg_init = parser.instantiate_classes(cfg)
+    cfg_init = parser.instantiate(cfg)
     cfg_init.run_config.sync_config = cfg_init.sync_config
     utils.eval_tune_run_config(cfg_init.param_space)
 

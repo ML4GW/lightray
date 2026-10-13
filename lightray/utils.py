@@ -5,7 +5,7 @@ from typing import Type
 from unittest.mock import patch
 
 from lightning.pytorch.cli import LightningCLI
-from ray import train, tune
+from ray import tune
 
 re_tune_func = re.compile(r"^tune.(\w+)\((.+)\)$")
 
@@ -40,7 +40,7 @@ def get_trainable(
             args.append(f"--{key}={val}")
 
         # setup lightning logger path to point to ray trial dir
-        log_dir = train.get_context().get_trial_dir()
+        log_dir = tune.get_context().get_trial_dir()
         args.append(f"--trainer.logger.save_dir={log_dir}")
 
         # get ckpt prefix based on fs
@@ -50,7 +50,7 @@ def get_trainable(
             ckpt_prefix = "s3://"
 
         # restore from checkpoint if available
-        checkpoint = train.get_checkpoint()
+        checkpoint = tune.get_checkpoint()
         ckpt_path = None
         if checkpoint:
             ckpt_path = os.path.join(

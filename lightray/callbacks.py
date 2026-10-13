@@ -3,7 +3,7 @@ import time
 from typing import Literal
 
 from botocore.exceptions import ClientError, ConnectTimeoutError
-from ray import train
+from ray import tune
 from ray.tune.integration.pytorch_lightning import TuneReportCheckpointCallback
 
 BOTO_RETRY_EXCEPTIONS = (ClientError, ConnectTimeoutError)
@@ -11,12 +11,12 @@ BOTO_RETRY_EXCEPTIONS = (ClientError, ConnectTimeoutError)
 
 def report_with_retries(metrics, checkpoint=None, retries: int = 10):
     """
-    Call `train.report`, which will persist checkpoints to s3,
+    Call `tune.report`, which will persist checkpoints to s3,
     retrying after any possible errors
     """
     for _ in range(retries):
         try:
-            train.report(metrics=metrics, checkpoint=checkpoint)
+            tune.report(metrics=metrics, checkpoint=checkpoint)
             break
         except BOTO_RETRY_EXCEPTIONS:
             time.sleep(5)
@@ -26,7 +26,7 @@ def report_with_retries(metrics, checkpoint=None, retries: int = 10):
 class LightRayReportCheckpointCallback(TuneReportCheckpointCallback):
     """
     Subclass of Rays TuneReportCheckpointCallback
-    with addition of a retry mechanism to the `train.report`
+    with addition of a retry mechanism to the `tune.report`
     call to handle transient s3 errors.
 
     Adds a `checkpoint_every` parameter to the constructor
@@ -88,6 +88,6 @@ class LightRayReportCheckpointCallback(TuneReportCheckpointCallback):
                 logging.debug(f"Reporting checkpoint on epoch {self.step}")
                 report_with_retries(report_dict, checkpoint=checkpoint)
         else:
-            train.report(metrics=report_dict)
+            tune.report(metrics=report_dict)
 
         self.step += 1
