@@ -1,20 +1,24 @@
 [project]
 name = "lightray"
-version = "0.2.4"
+version = "0.2.5"
 description = "Distribute a LightningCLI hyperparameter search with Ray Tune"
 authors = [{ name = "Ethan Jacob Marx", email = "ethan.marx@ligo.org" }]
-requires-python = "~=3.9"
+maintainers = [{ name = "Will Benoit", email = "william.benoit@ligo.org" }]
+requires-python = ">=3.11,<3.15"
 readme = "README.md"
 license = "MIT"
 dependencies = [
-    "ray[default, tune]>=2.8.0,<3",
+    "ray[default, tune]>=2.41,<3",
     "lightning>=2.4.0",
-    "s3fs>=2024.9.0,<2025",
-    "pyarrow>=17.0.0,<18",
-    "jsonargparse[signatures]>=4.33.2,<5",
-    "wandb>=0.18.5,<0.19",
+    "s3fs>=2024.9.0",
+    "pyarrow>=17",
+    "jsonargparse[signatures]>=4.50,<5",
     "omegaconf>=2.3.0,<3",
+    "botocore",
 ]
+
+[project.urls]
+Repository = "https://github.com/ML4GW/lightray"
 
 [project.scripts]
 lightray = "lightray.cli:cli"
@@ -36,7 +40,7 @@ extend-exclude = ["docs"]
 
 [tool.ruff.lint]
 mccabe = {"max-complexity" = 18}
-select = ["B", "C", "E", "F", "W",  "B9"]
+select = ["B", "C", "E", "F", "W", "B9", "T201"]
 ignore = ["W605", "E203"]  # ignore for consistency with black
 
 # ignore asterisk imports and unused

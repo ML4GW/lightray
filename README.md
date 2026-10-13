@@ -52,23 +52,21 @@ tune_config:
   num_samples: 1
   reuse_actors: true
 
-# ray.train.RunConfig
+# ray.tune.RunConfig
 run_config:
   name: "my-first-run"
   storage_path: s3://aframe-test/new-tune/
+  # ray.tune.FailureConfig
   failure_config:
-    class_path: ray.train.FailureConfig
-    init_args:
-      max_failures: 1
+    max_failures: 1
+  # ray.tune.CheckpointConfig
   checkpoint_config:
-    class_path: ray.train.CheckpointConfig
-    init_args:
-      num_to_keep: 5
-      checkpoint_score_attribute: "val_loss"
-      checkpoint_score_order: "min"
+    num_to_keep: 5
+    checkpoint_score_attribute: "val_loss"
+    checkpoint_score_order: "min"
   verbose: null
 
-# ray.train.SyncConfig
+# ray.tune.SyncConfig
 sync_config:
   sync_period: 1000
 
