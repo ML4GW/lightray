@@ -1,6 +1,6 @@
 [project]
 name = "lightray"
-version = "0.2.5"
+version = ["version"]
 description = "Distribute a LightningCLI hyperparameter search with Ray Tune"
 authors = [{ name = "Ethan Jacob Marx", email = "ethan.marx@ligo.org" }]
 maintainers = [{ name = "Will Benoit", email = "william.benoit@ligo.org" }]
@@ -29,9 +29,13 @@ dev = [
     "pytest>=8.3.2,<9",
 ]
 
+[tool.setuptools-git-versioning]
+enabled = true
+dev_template = "{tag}.post{ccount}+git.{sha}"
+
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = [ "setuptools>=77.0.3", "wheel", "setuptools-git-versioning>=2.0,<4",]
+build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 line-length = 79
